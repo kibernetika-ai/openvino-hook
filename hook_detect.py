@@ -14,12 +14,17 @@ LOG = logging.getLogger(__name__)
 
 def init_hook(ctx, **params):
     LOG.info('Init params: {}'.format(params))
-    PARAMS.update(params)
+    _apply_params(params)
 
 
 def update_hook(ctx, **params):
     LOG.info('Update params: {}'.format(params))
+    _apply_params(params)
+
+
+def _apply_params(params):
     PARAMS.update(params)
+    PARAMS["threshold"] = float(PARAMS["threshold"])
 
 
 def process(inputs, ctx, **kwargs):
