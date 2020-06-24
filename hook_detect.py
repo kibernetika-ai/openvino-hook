@@ -37,7 +37,7 @@ def process(inputs, ctx, **kwargs):
     if is_streaming:
         output = frame
     else:
-        _, buf = cv2.imencode('.jpg', frame)
+        _, buf = cv2.imencode('.jpg', frame[:, :, ::-1])
         output = buf.tostring()
 
     return {
