@@ -35,9 +35,9 @@ def process(inputs, ctx, **kwargs):
         cv2.rectangle(frame, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (0, 255, 0), 1)
 
     if is_streaming:
-        output = frame
+        output = frame[:, :, ::-1]
     else:
-        _, buf = cv2.imencode('.jpg', frame[:, :, ::-1])
+        _, buf = cv2.imencode('.jpg', frame)
         output = buf.tostring()
 
     return {
