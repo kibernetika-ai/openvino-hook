@@ -336,6 +336,118 @@
 }
 ```
 
+## Facial landmarks
+
+* [facial-landmarks-35-adas-0002](https://github.com/opencv/open_model_zoo/tree/master/models/intel/facial-landmarks-35-adas-0002)
+
+```json
+{
+  "serving": {
+    "sources": [
+      {
+        "gitRepo": {
+          "repository": "https://github.com/kibernetika-ai/openvino-hook"
+        },
+        "name": "src",
+        "subPath": "openvino-hook"
+      },
+      {
+        "model": {
+          "workspace": "g-core",
+          "model": "face-detection-retail-0004",
+          "version": "1.0.0-cpu"
+        },
+        "name": "face"
+      }
+    ],
+    "command": "kserving --driver openvino --model-path $FACE_DIR/face-detection-retail-0004.xml --driver openvino --model-path $MODEL_DIR/facial-landmarks-35-adas-0002.xml --hooks $SRC_DIR/hook_landmarks.py -o threshold=.5 --http-enable --webrtc --input-name input --output-name output",
+    "ports": [
+      {
+        "name": "grpc",
+        "protocol": "TCP",
+        "port": 9000,
+        "targetPort": 9000
+      },
+      {
+        "name": "webrtc",
+        "protocol": "TCP",
+        "port": 5004,
+        "targetPort": 5004
+      }
+    ],
+    "images": {
+      "cpu": "kuberlab/serving:latest-openvino",
+      "gpu": "kuberlab/serving:latest-openvino-gpu"
+    },
+    "replicas": 1,
+    "workDir": "$SRC_DIR",
+    "accelerators": {
+      "gpu": 0
+    },
+    "requests": {
+      "cpu": "500m",
+      "memory": "64Mi"
+    },
+    "limits": {
+      "cpu": "2",
+      "memory": "1Gi"
+    }
+  },
+  "servingSpec": {
+    "params": [
+      {
+        "name": "input",
+        "type": "image_webrtc",
+        "label": "Input image",
+        "value": ""
+      }
+    ],
+    "response": [
+      {
+        "name": "output",
+        "type": "bytes",
+        "shape": [
+          -1
+        ],
+        "description": "Output image"
+      },
+      {
+        "name": "bboxes",
+        "type": "double",
+        "shape": [
+          -1,
+          4
+        ],
+        "description": "Boundary boxes"
+      },
+      {
+        "name": "probabilities",
+        "type": "double",
+        "shape": [
+          -1
+        ],
+        "description": "Detection probabilities"
+      },
+      {
+        "name": "landmarks",
+        "type": "double",
+        "shape": [
+          -1,
+          2,
+          35
+        ],
+        "description": "Landmarks"
+      }
+    ],
+    "options": {
+      "noCache": true
+    },
+    "model": "any",
+    "template": "image"
+  }
+}
+```
+
 ## Testing
 
 ### Run serving
@@ -347,8 +459,8 @@ kserving \
   --driver openvino \
   --model-path /opt/intel/openvino/deployment_tools/intel_models/face-detection-adas-0001/FP32/face-detection-adas-0001.xml \
   --hooks hook_detect.py \
-  -o threshold=.8 \
-  -o object_name=person \ 
+  -o threshold=.5 \
+  -o object_name=face \ 
   --http-enable
 ```
 
@@ -361,7 +473,7 @@ kserving \
   --driver openvino \
   --model-path /opt/intel/openvino/deployment_tools/intel_models/age-gender-recognition-retail-0013/FP32/age-gender-recognition-retail-0013.xml \
   --hooks hook_age_gender.py \
-  -o threshold=.3 \
+  -o threshold=.5 \
   --http-enable
 ```
 
@@ -374,7 +486,20 @@ kserving \
   --driver openvino \
   --model-path /opt/intel/openvino/deployment_tools/intel_models/head-pose-estimation-adas-0001/FP32/head-pose-estimation-adas-0001.xml \
   --hooks hook_head_pose.py \
-  -o threshold=.3 \
+  -o threshold=.5 \
+  --http-enable
+```
+
+Landmarks
+
+```shell script
+kserving \
+  --driver openvino \
+  --model-path /opt/intel/openvino/deployment_tools/intel_models/face-detection-retail-0004/FP32/face-detection-retail-0004.xml \
+  --driver openvino \
+  --model-path /opt/intel/openvino/deployment_tools/intel_models/facial-landmarks-35-adas-0002/FP32/facial-landmarks-35-adas-0002.xml \
+  --hooks hook_landmarks.py \
+  -o threshold=.5 \
   --http-enable
 ```
 

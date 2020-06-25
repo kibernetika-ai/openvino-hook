@@ -89,3 +89,41 @@ def draw_axis(frame: np.ndarray, bbox: [int], hp_ind, size: int = None):
     cv2.line(frame, (int(tdx), int(tdy)), (int(x3), int(y3)), c3, 1)
 
     return frame
+
+
+def landmarks(
+        drv: driver.ServingDriver,
+        frame: np.ndarray,
+        bboxes: np.ndarray,
+        rgb=True,
+):
+    img_size = list(drv.inputs.values())[0][2]
+    imgs = np.stack(images.get_images(
+        frame, np.array(bboxes).astype(int),
+        img_size,
+        face_crop_margin=0,
+        normalization=None,
+    ))
+
+    if rgb:
+        # Convert to BGR.
+        imgs = imgs[:, :, :, ::-1]
+
+    input_name = list(drv.inputs.keys())[0]
+    outputs = drv.predict({input_name: np.array(imgs).transpose([0, 3, 1, 2])})
+
+    landmarks = outputs["align_fc3"]
+    landmarks = landmarks.reshape(landmarks.shape[0], -1, 2)
+
+    # for i, bbox in bboxes:
+    bboxes_sizes = np.vstack((bboxes[:, 2] - bboxes[:, 0], bboxes[:, 3] - bboxes[:, 1])).transpose()
+    bboxes_shifts = bboxes[:, :2]
+    landmarks = landmarks * bboxes_sizes + bboxes_shifts
+
+    return landmarks
+
+
+def draw_landmarks(frame: np.ndarray, landmarks):
+    for landmark in landmarks:
+        for point in landmark:
+            cv2.circle(frame, tuple(point.astype(int)), 2, (0, 255, 0))
