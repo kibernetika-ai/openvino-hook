@@ -2,13 +2,20 @@
 
 ## Models
 
-### Face detection
+### Detection
 
+#### Face detection
+* [face-detection-adas-0001](https://github.com/opencv/open_model_zoo/tree/master/models/intel/face-detection-adas-0001)
 * [face-detection-retail-0004](https://github.com/opencv/open_model_zoo/tree/master/models/intel/face-detection-retail-0004)
 * [face-detection-retail-0005](https://github.com/opencv/open_model_zoo/tree/master/models/intel/face-detection-retail-0005)
-* [face-detection-adas-0001](https://github.com/opencv/open_model_zoo/tree/master/models/intel/face-detection-adas-0001)
 
-## Configuration:
+#### Person detection
+* [person-detection-asl-0001](https://github.com/opencv/open_model_zoo/tree/master/models/intel/person-detection-asl-0001)
+* [person-detection-adas-0002](https://github.com/opencv/open_model_zoo/tree/master/models/intel/person-detection-adas-0002)
+* [person-detection-retail-0002](https://github.com/opencv/open_model_zoo/tree/master/models/intel/person-detection-retail-0002)
+* [person-detection-retail-0013](https://github.com/opencv/open_model_zoo/tree/master/models/intel/person-detection-retail-0013)
+
+### Configuration:
 
 ```json
 {
@@ -22,7 +29,7 @@
         "subPath": "openvino-hook"
       }
     ],
-    "command": "kserving --driver openvino --model-path $MODEL_DIR/face-detection-XXXX-XXXX.xml --hooks $SRC_DIR/hook_detect.py -o threshold=.1 -o object_name=face --http-enable --webrtc --input-name input --output-name output",
+    "command": "kserving --driver openvino --model-path $MODEL_DIR/XXXX-detection-XXXX-XXXX.xml --hooks $SRC_DIR/hook_detect.py -o threshold=.1 -o object_name=OBJECT --http-enable --webrtc --input-name input --output-name output",
     "ports": [
       {
         "name": "grpc",
