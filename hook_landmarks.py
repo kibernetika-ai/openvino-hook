@@ -59,7 +59,8 @@ def process(inputs, ctx, **kwargs):
                       "probability: {:.2f}".format(
                     probabilities[i]),
             )
-            head.draw_landmarks(frame, landmarks)
+
+        head.draw_landmarks(frame, landmarks)
 
         landmarks = landmarks.tolist()
 

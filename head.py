@@ -113,12 +113,12 @@ def landmarks(
     outputs = drv.predict({input_name: np.array(imgs).transpose([0, 3, 1, 2])})
 
     landmarks = outputs["align_fc3"]
-    landmarks = landmarks.reshape(landmarks.shape[0], -1, 2)
 
-    # for i, bbox in bboxes:
-    bboxes_sizes = np.vstack((bboxes[:, 2] - bboxes[:, 0], bboxes[:, 3] - bboxes[:, 1])).transpose()
-    bboxes_shifts = bboxes[:, :2]
-    landmarks = landmarks * bboxes_sizes + bboxes_shifts
+    landmarks = landmarks.reshape(landmarks.shape[0], -1, 2)
+    sizes = np.array((bboxes[:, 2] - bboxes[:, 0], bboxes[:, 3] - bboxes[:, 1])).transpose()
+    offset = bboxes[:, :2]
+    landmarks = landmarks * sizes.reshape((len(landmarks), 1, 2))
+    landmarks = landmarks + offset.transpose().reshape((len(landmarks), 1, 2))
 
     return landmarks
 
@@ -126,4 +126,6 @@ def landmarks(
 def draw_landmarks(frame: np.ndarray, landmarks):
     for landmark in landmarks:
         for point in landmark:
-            cv2.circle(frame, tuple(point.astype(int)), 2, (0, 255, 0))
+            cv2.circle(frame, tuple(point.astype(int)), 4, (0, 0, 0), -1)
+            cv2.circle(frame, tuple(point.astype(int)), 3, (0, 255, 0), -1)
+    return frame
