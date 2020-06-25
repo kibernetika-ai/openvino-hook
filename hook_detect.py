@@ -41,7 +41,8 @@ def process(inputs, ctx, **kwargs):
         draw_bbox(
             frame,
             bbox.astype(int),
-            label="Detected face\nprobability: {:.2f}".format(probabilities[i]),
+            label="Detected {}\nprobability: {:.2f}".format(
+                PARAMS["object_name"], probabilities[i]),
         )
 
     if is_streaming:

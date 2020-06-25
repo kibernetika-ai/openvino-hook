@@ -29,7 +29,7 @@
         "subPath": "openvino-hook"
       }
     ],
-    "command": "kserving --driver openvino --model-path $MODEL_DIR/XXXX-detection-XXXX-XXXX.xml --hooks $SRC_DIR/hook_detect.py -o threshold=.1 -o object_name=OBJECT --http-enable --webrtc --input-name input --output-name output",
+    "command": "kserving --driver openvino --model-path $MODEL_DIR/XXXX-detection-XXXX-XXXX.xml --hooks $SRC_DIR/hook_detect.py -o threshold=.5 -o object_name=OBJECT --http-enable --webrtc --input-name input --output-name output",
     "ports": [
       {
         "name": "grpc",
@@ -131,7 +131,7 @@
         "name": "face"
       }
     ],
-    "command": "kserving --driver openvino --model-path $FACE_DIR/face-detection-retail-0004.xml --driver openvino --model-path $MODEL_DIR/age-gender-recognition-retail-0013.xml --hooks $SRC_DIR/hook_age_gender.py -o threshold=.1 --http-enable --webrtc --input-name input --output-name output",
+    "command": "kserving --driver openvino --model-path $FACE_DIR/face-detection-retail-0004.xml --driver openvino --model-path $MODEL_DIR/age-gender-recognition-retail-0013.xml --hooks $SRC_DIR/hook_age_gender.py -o threshold=.5 --http-enable --webrtc --input-name input --output-name output",
     "ports": [
       {
         "name": "grpc",
@@ -249,7 +249,7 @@
         "name": "face"
       }
     ],
-    "command": "kserving --driver openvino --model-path $FACE_DIR/face-detection-retail-0004.xml --driver openvino --model-path $MODEL_DIR/head-pose-estimation-adas-0001.xml --hooks $SRC_DIR/hook_head_pose.py -o threshold=.1 --http-enable --webrtc --input-name input --output-name output",
+    "command": "kserving --driver openvino --model-path $FACE_DIR/face-detection-retail-0004.xml --driver openvino --model-path $MODEL_DIR/head-pose-estimation-adas-0001.xml --hooks $SRC_DIR/hook_head_pose.py -o threshold=.5 --http-enable --webrtc --input-name input --output-name output",
     "ports": [
       {
         "name": "grpc",
@@ -335,7 +335,6 @@
   }
 }
 ```
-
 
 ## Testing
 
