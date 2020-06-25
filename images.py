@@ -25,12 +25,8 @@ def get_images(image, bounding_boxes, face_crop_size=160, face_crop_margin=32, n
             det_arr.append(np.squeeze(det))
 
         for i, det in enumerate(det_arr):
-            print("???? det", det)
             cropped = crop_by_box(image, det, margin=face_crop_margin, margin_coef=face_crop_margin_coef)
-            print("???? 2", face_crop_size)
-
             scaled = cv2.resize(cropped, (face_crop_size, face_crop_size), interpolation=cv2.INTER_AREA)
-            print("???? 3")
             if normalization == NORMALIZATION_PREWHITEN:
                 images.append(prewhiten(scaled))
             elif normalization == NORMALIZATION_STANDARD:
