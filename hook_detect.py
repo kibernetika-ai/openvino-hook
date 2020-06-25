@@ -4,6 +4,7 @@ import cv2
 from ml_serving.utils import helpers
 
 from detect import detect_bboxes
+from overlay import draw_bbox
 
 PARAMS = {
     "threshold": .5,
@@ -30,9 +31,17 @@ def _apply_params(params):
 def process(inputs, ctx, **kwargs):
     frame, is_streaming = helpers.load_image(inputs, 'input', rgb=False)
     LOG.info("frame shape: {}".format(frame.shape))
-    bboxes, probabilities = detect_bboxes(ctx.drivers[0], frame, PARAMS.get("threshold", .5))
-    for bbox in bboxes.astype(int):
-        cv2.rectangle(frame, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (0, 255, 0), 1)
+    bboxes, probabilities = detect_bboxes(
+        ctx.drivers[0],
+        frame,
+        PARAMS.get("threshold", .5),
+    )
+    for i, bbox in enumerate(bboxes):
+        draw_bbox(
+            frame,
+            bbox.astype(int),
+            label="Detected person\bprob: {:.3f}".format(probabilities[i]),
+        )
 
     if is_streaming:
         output = frame[:, :, ::-1]

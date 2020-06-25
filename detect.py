@@ -3,14 +3,21 @@ import numpy as np
 from ml_serving.drivers import driver
 
 
-def detect_bboxes(drv: driver.ServingDriver, bgr_frame: np.ndarray,
-                            threshold: float = 0.5, offset=(0, 0)):
+def detect_bboxes(
+        drv: driver.ServingDriver,
+        bgr_frame: np.ndarray,
+        threshold: float = 0.5,
+        offset=(0, 0),
+):
     # Get boxes shaped [N, 5]:
     # xmin, ymin, xmax, ymax, confidence
     input_name, input_shape = list(drv.inputs.items())[0]
     output_name = list(drv.outputs)[0]
-    inference_frame = cv2.resize(bgr_frame, tuple(input_shape[:-3:-1]), interpolation=cv2.INTER_AREA)
-    inference_frame = np.transpose(inference_frame, [2, 0, 1]).reshape(input_shape)
+    inference_frame = cv2.resize(
+        bgr_frame, tuple(input_shape[:-3:-1]), interpolation=cv2.INTER_AREA)
+    inference_frame = np.transpose(
+        inference_frame, [2, 0, 1],
+    ).reshape(input_shape)
     outputs = drv.predict({input_name: inference_frame})
     output = outputs[output_name]
     output = output.reshape(-1, 7)
