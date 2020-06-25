@@ -10,7 +10,6 @@ from overlay import draw_bbox
 
 PARAMS = {
     "detect_threshold": .5,
-    "object_name": "object",
 }
 
 MARGIN_COEF = .4
