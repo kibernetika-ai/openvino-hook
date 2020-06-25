@@ -8,6 +8,7 @@ from overlay import draw_bbox
 
 PARAMS = {
     "threshold": .5,
+    "object_name": "object",
 }
 
 LOG = logging.getLogger(__name__)
@@ -40,7 +41,7 @@ def process(inputs, ctx, **kwargs):
         draw_bbox(
             frame,
             bbox.astype(int),
-            label="Detected person\bprob: {:.3f}".format(probabilities[i]),
+            label="Detected face\nprobability: {:.2f}".format(probabilities[i]),
         )
 
     if is_streaming:
