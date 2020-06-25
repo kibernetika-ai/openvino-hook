@@ -116,9 +116,11 @@ def landmarks(
 
     landmarks = landmarks.reshape(landmarks.shape[0], -1, 2)
     sizes = np.array((bboxes[:, 2] - bboxes[:, 0], bboxes[:, 3] - bboxes[:, 1])).transpose()
-    offset = bboxes[:, :2]
     landmarks = landmarks * sizes.reshape((len(landmarks), 1, 2))
-    landmarks = landmarks + offset.transpose().reshape((len(landmarks), 1, 2))
+
+    offset = bboxes[:, :2]
+    # landmarks = landmarks + offset.transpose().reshape((len(landmarks), 1, 2))
+    landmarks = landmarks + np.resize(offset, (offset.shape[0], 1, offset.shape[1]))
 
     return landmarks
 
